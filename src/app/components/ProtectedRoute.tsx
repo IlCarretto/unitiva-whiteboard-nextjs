@@ -1,10 +1,14 @@
-"use-client";
+"use client";
 
 import React from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
-const ProtectedRoute: React.FC = ({ children }) => {
+interface IProps {
+  children: React.ReactNode;
+}
+
+const ProtectedRoute = ({ children }: IProps) => {
   const { data: session, status: loading } = useSession();
   const { push } = useRouter();
 
