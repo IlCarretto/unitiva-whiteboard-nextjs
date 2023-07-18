@@ -9,17 +9,14 @@ interface IProps {
 }
 
 const ProtectedRoute = ({ children }: IProps) => {
-  const { data: session, status: loading } = useSession();
+  const { data: session, status } = useSession();
   const { push } = useRouter();
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   if (!session) {
     push("/login");
     return null;
   }
+
   return <>{children}</>;
 };
 
