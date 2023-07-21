@@ -12,7 +12,11 @@ const ProtectedRoute = ({ children }: IProps) => {
   const { data: session, status } = useSession();
   const { push } = useRouter();
 
-  if (!session) {
+  if (status === "loading") {
+    return <div>..Loading</div>;
+  }
+
+  if (!session && status === "unauthenticated") {
     push("/login");
     return null;
   }

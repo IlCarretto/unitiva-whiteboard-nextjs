@@ -1,0 +1,25 @@
+#dashboard {
+    display: flex;
+    
+    .createRoom,
+    .joinRoom {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50vw;
+        height: calc(100vh - var(--header-height));
+    }
+    
+    .createRoom {
+        background-color: #F1F1F1;
+    }
+
+    .db-btn {
+        background-color: #252222;
+        color: #fff;
+        padding: .2rem;
+        border-radius: 2px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+}

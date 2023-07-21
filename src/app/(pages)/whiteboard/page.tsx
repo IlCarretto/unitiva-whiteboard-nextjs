@@ -1,124 +1,31 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import ProtectedRoute from "@/app/components/ProtectedRoute";
-import { useDispatch, useSelector } from "react-redux";
-import { actions } from "@liveblocks/redux";
-import {
-  insertRectangle,
-  onShapePointerDown,
-  deleteShape,
-  onCanvasPointerMove,
-  onCanvasPointerUp,
-} from "@/app/redux/store";
-import "./page.scss";
-import { RectangleProps, Shape } from "@/app/types";
-import { client } from "@/../liveblocks.config";
+import { ColorPicker, Toolbar } from "@/app/components/Toolbar";
+import { usePathname } from "next/navigation";
+import React from "react";
 
-const roomId = "redux-whiteboard";
-
-const Whiteboard = () => {
-  const shapes = useSelector((state: { shapes: Shape }) => state.shapes);
-  const isLoading = useSelector(
-    (state: { liveblocks: { isStorageLoading: boolean; others: any[] } }) =>
-      state.liveblocks.isStorageLoading
-  );
-  const others = useSelector(
-    (state: { liveblocks: { others: any[] } }) => state.liveblocks.others
-  );
-  const selectedShape = useSelector(
-    (state: { selectedShape: string | null }) => state.selectedShape
-  );
-  const canvasRef = useRef(null);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(actions.enterRoom(roomId));
-
-    return () => {
-      dispatch(actions.leaveRoom(roomId));
-    };
-  }, [dispatch]);
-
-  if (isLoading) {
-    return <div className="loading">..Loading</div>;
-  }
+const RoomPage = () => {
+  const pathname = usePathname();
 
   return (
-    <>
-      <ProtectedRoute>
-        <div className="toolbar">
-          <button onClick={() => dispatch(insertRectangle())}>Rectangle</button>
-          <button
-            onClick={() => dispatch(deleteShape())}
-            disabled={selectedShape == null}
-          >
-            Delete
-          </button>
-          <button onClick={() => client.getRoom(roomId)?.history.undo()}>
-            Undo
-          </button>
-          <button onClick={() => client.getRoom(roomId)?.history.redo()}>
-            Redo
-          </button>
+    <div className="row">
+      <h1 className="text-center">Whiteboard room: N{}</h1>
+      <div className="col-md-12 mt-4 mb-5 d-flex align-items-center justify-content-center">
+        <div className="col-md-2">
+          <Toolbar />
         </div>
-        <div
-          ref={canvasRef}
-          className="canvas"
-          onPointerMove={(e) => {
-            e.preventDefault();
-            dispatch(onCanvasPointerMove({ x: e.clientX, y: e.clientY }));
-          }}
-          onPointerUp={() => {
-            dispatch(onCanvasPointerUp());
-            client.getRoom(roomId)?.history.resume();
-          }}
-        >
-          {Object.entries(shapes).map(([shapeId, shape]) => {
-            let selectionColor = "transparent";
-
-            if (selectedShape === shapeId) {
-              selectionColor = "blue";
-            } else if (
-              others.some((user) => user.presence.selectedShape === shapeId)
-            ) {
-              selectionColor = "green";
-            }
-            return (
-              <Rectangle
-                key={shapeId}
-                shape={shape}
-                id={shapeId}
-                selectionColor={selectionColor}
-              />
-            );
-          })}
+        <div className="col-md-2 d-flex flex-column align-items-center">
+          <ColorPicker />
         </div>
-      </ProtectedRoute>
-    </>
+        <div className="col-md-2 d-flex gap-2">
+          <button className="btn btn-primary">Undo</button>
+          <button className="btn btn-outline-primary">Redo</button>
+        </div>
+        <div className="col-md-2">
+          <button className="btn btn-danger">Clear canvas</button>
+        </div>
+      </div>
+    </div>
   );
 };
 
-const Rectangle: React.FC<RectangleProps> = ({
-  shape,
-  selectionColor,
-  id,
-}: any) => {
-  const dispatch = useDispatch();
-  return (
-    <div
-      className="rectangle"
-      style={{
-        transform: `translate(${shape.x}px, ${shape.y}px)`,
-        backgroundColor: shape.fill ? shape.fill : "#CCC",
-        borderColor: selectionColor,
-      }}
-      onPointerDown={(e) => {
-        e.stopPropagation();
-        client.getRoom(roomId)?.history.pause();
-        dispatch(onShapePointerDown(id));
-      }}
-    ></div>
-  );
-};
-
-export default Whiteboard;
+export default RoomPage;

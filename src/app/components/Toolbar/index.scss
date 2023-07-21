@@ -1,0 +1,36 @@
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    .tool-group {
+        position: relative;
+        
+        input {
+            border: 1px solid black;
+            background: #e2e2e2;
+            width: 50px;
+            height: 50px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            -ms-appearance: none;
+            -o-appearance: none;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        label {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            font-size: 1.4rem;
+        }
+    }
+}
+
+.color-picker {
+    display: flex;
+    align-items: center;
+}
