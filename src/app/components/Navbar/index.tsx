@@ -13,6 +13,14 @@ const Navbar = () => {
       name: "Home",
       href: "/",
     },
+    ...(session && status === "authenticated"
+      ? [
+          {
+            name: "Dashboard",
+            href: "/dashboard",
+          },
+        ]
+      : []),
     {
       name: "Login",
       href: "/login",
@@ -36,13 +44,6 @@ const Navbar = () => {
             </li>
           );
         })}
-        {session && status === "authenticated" ? (
-          <li>
-            <Link href="/dashboard">Dashboard</Link>
-          </li>
-        ) : (
-          ""
-        )}
       </ul>
     </nav>
   );

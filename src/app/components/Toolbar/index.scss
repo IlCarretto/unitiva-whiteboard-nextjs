@@ -17,6 +17,11 @@
             -o-appearance: none;
             appearance: none;
             cursor: pointer;
+
+        }
+
+        :checked {
+            border: 2px solid blue!important;
         }
 
         label {

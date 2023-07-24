@@ -33,7 +33,7 @@ const Modal = ({ isOpen, onClose, createModal }: IProps) => {
             </div>
           </>
         )}
-        <a className="enter-btn" href={`/whiteboard`}>
+        <a className="enter-btn" href={`/room`}>
           go to room
           <AiOutlineArrowRight />
         </a>
