@@ -9,16 +9,24 @@ import rough from "roughjs/bundled/rough.esm";
 import { Element } from "./types";
 import { useToolbarContext } from "../Toolbar/ToolbarContext";
 import { useColorPickerContext } from "../ColorPicker/ColorPickerContext";
+import { Room } from "@/app/(pages)/dashboard/types";
 
 interface IProps {
   elements: Element[];
   setElements: React.Dispatch<React.SetStateAction<Element[]>>;
   canvasRef: MutableRefObject<HTMLCanvasElement>;
   ctxRef: MutableRefObject<CanvasRenderingContext2D | null>;
+  user: Room | null;
 }
 const roughGenerator = rough.generator();
 
-const Whiteboard = ({ canvasRef, ctxRef, elements, setElements }: IProps) => {
+const Whiteboard = ({
+  canvasRef,
+  ctxRef,
+  elements,
+  setElements,
+  user,
+}: IProps) => {
   const { selectedTool } = useToolbarContext();
   const { selectedColor } = useColorPickerContext();
   const [isDrawing, setIsDrawing] = useState(false);
@@ -178,6 +186,14 @@ const Whiteboard = ({ canvasRef, ctxRef, elements, setElements }: IProps) => {
   const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
     setIsDrawing(false);
   };
+
+  if (!user?.presenter) {
+    return (
+      <div className="whiteboard-canvas">
+        <canvas ref={canvasRef} />
+      </div>
+    );
+  }
 
   return (
     <div

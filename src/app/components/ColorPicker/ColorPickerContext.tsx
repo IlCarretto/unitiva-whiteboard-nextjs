@@ -27,7 +27,7 @@ interface ColorPickerProviderProps {
 export const ColorPickerProvider: React.FC<ColorPickerProviderProps> = ({
   children,
 }) => {
-  const [selectedColor, setSelectedColor] = useState("#000");
+  const [selectedColor, setSelectedColor] = useState("#000000");
 
   return (
     <ColorPickerContext.Provider value={{ selectedColor, setSelectedColor }}>

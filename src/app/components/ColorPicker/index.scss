@@ -1,0 +1,49 @@
+.color-picker {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    width: 40px;
+    height: 40px;
+    border: none;
+    cursor: pointer;
+}
+.color-picker::-webkit-color-swatch {
+    border-radius: 50%;
+}
+.color-picker::-moz-color-swatch {
+    border-radius: 50%;
+}
+
+.blue-picker,
+.white-picker,
+.yellow-picker,
+.green-picker,
+.red-picker {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+}
+
+.white-picker {
+    background-color: #ffffff;
+    border: 1px solid black;
+}
+
+.blue-picker {
+ background-color: #0967d2;   
+}
+
+.yellow-picker {
+    background-color: #f0b429;
+}
+
+.green-picker {
+    background-color: #18981d;
+}
+
+.red-picker {
+    background-color: #e12d39;
+}
+

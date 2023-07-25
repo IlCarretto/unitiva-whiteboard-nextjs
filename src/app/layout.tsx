@@ -5,6 +5,7 @@ import { ReduxProvider } from "./redux/provider";
 import { AuthProvider } from "./components/AuthProvider";
 import Header from "./components/Header/index";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { SocketProvider } from "./context/SocketContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +24,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <AuthProvider>
           <Header />
-          <ReduxProvider>{children}</ReduxProvider>
+          <ReduxProvider>
+            <SocketProvider>{children}</SocketProvider>
+          </ReduxProvider>
         </AuthProvider>
       </body>
     </html>

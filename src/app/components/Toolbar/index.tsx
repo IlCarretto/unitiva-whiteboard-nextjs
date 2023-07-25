@@ -29,7 +29,7 @@ export const Toolbar = () => {
   };
 
   return (
-    <div className="toolbar">
+    <div className="toolbar gap-2">
       {toolGroups.map((toolGroup) => (
         <div className="tool-group" key={toolGroup.value}>
           <input
@@ -40,7 +40,9 @@ export const Toolbar = () => {
             checked={selectedTool === toolGroup.value}
             onChange={handleToolChange}
           />
-          <label htmlFor={toolGroup.value}>{toolGroup.icon}</label>
+          <label className="tools-icon" htmlFor={toolGroup.value}>
+            {toolGroup.icon}
+          </label>
         </div>
       ))}
     </div>

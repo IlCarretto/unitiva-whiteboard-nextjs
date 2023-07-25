@@ -1,27 +1,28 @@
 .toolbar {
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 4px;
 
     .tool-group {
         position: relative;
         
         input {
-            border: 1px solid black;
+            border: 1px solid #102a43;
             background: #e2e2e2;
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             -webkit-appearance: none;
             -moz-appearance: none;
             -ms-appearance: none;
             -o-appearance: none;
             appearance: none;
             cursor: pointer;
-
+            border-radius: 4px;
         }
 
         :checked {
-            border: 2px solid blue!important;
+            border: 2px solid #0057cd!important;
         }
 
         label {
@@ -30,12 +31,6 @@
             left: 50%;
             transform: translate(-50%, -50%);
             cursor: pointer;
-            font-size: 1.4rem;
         }
     }
-}
-
-.color-picker {
-    display: flex;
-    align-items: center;
 }
