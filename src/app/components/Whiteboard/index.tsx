@@ -10,6 +10,8 @@ import { Element } from "./types";
 import { useToolbarContext } from "../Toolbar/ToolbarContext";
 import { useColorPickerContext } from "../ColorPicker/ColorPickerContext";
 import { Room } from "@/app/(pages)/dashboard/types";
+import { useSocketContext } from "@/app/context/SocketContext";
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
 
 interface IProps {
   elements: Element[];
@@ -29,7 +31,23 @@ const Whiteboard = ({
 }: IProps) => {
   const { selectedTool } = useToolbarContext();
   const { selectedColor } = useColorPickerContext();
+  const { socket } = useSocketContext();
   const [isDrawing, setIsDrawing] = useState(false);
+  const [img, setImg] = useState<string | StaticImport>("");
+
+  useEffect(() => {
+    socket.on("whiteboardDataResp", (data) => {
+      setImg(data.imgURL);
+    });
+  });
+
+  if (!user?.presenter) {
+    return (
+      <div className="whiteboard-canvas">
+        <img src={img} className="w-100 h-100" alt="real time whiteboard" />
+      </div>
+    );
+  }
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -52,46 +70,50 @@ const Whiteboard = ({
   }, [selectedColor]);
 
   useLayoutEffect(() => {
-    const roughCanvas = rough.canvas(canvasRef.current);
-    if (elements.length > 0) {
-      ctxRef.current?.clearRect(
-        0,
-        0,
-        canvasRef.current.width,
-        canvasRef.current.height
-      );
-    }
-    elements.forEach((el) => {
-      if (el.type === "pencil") {
-        roughCanvas.linearPath(el.path, {
-          stroke: el.stroke,
-          strokeWidth: 5,
-          roughness: 0,
-        });
-      } else if (el.type === "line") {
-        roughCanvas.draw(
-          roughGenerator.line(el.offsetX, el.offsetY, el.width, el.height, {
+    if (canvasRef) {
+      const roughCanvas = rough.canvas(canvasRef.current);
+      if (elements.length > 0) {
+        ctxRef.current?.clearRect(
+          0,
+          0,
+          canvasRef.current.width,
+          canvasRef.current.height
+        );
+      }
+      elements.forEach((el) => {
+        if (el.type === "pencil") {
+          roughCanvas.linearPath(el.path, {
             stroke: el.stroke,
             strokeWidth: 5,
             roughness: 0,
-          })
-        );
-      } else if (el.type === "rectangle") {
-        roughCanvas.draw(
-          roughGenerator.rectangle(
-            el.offsetX,
-            el.offsetY,
-            el.width,
-            el.height,
-            {
+          });
+        } else if (el.type === "line") {
+          roughCanvas.draw(
+            roughGenerator.line(el.offsetX, el.offsetY, el.width, el.height, {
               stroke: el.stroke,
               strokeWidth: 5,
               roughness: 0,
-            }
-          )
-        );
-      }
-    });
+            })
+          );
+        } else if (el.type === "rectangle") {
+          roughCanvas.draw(
+            roughGenerator.rectangle(
+              el.offsetX,
+              el.offsetY,
+              el.width,
+              el.height,
+              {
+                stroke: el.stroke,
+                strokeWidth: 5,
+                roughness: 0,
+              }
+            )
+          );
+        }
+      });
+      const canvasImage = canvasRef.current.toDataURL();
+      socket.emit("whiteboardData", canvasImage);
+    }
   }, [elements]);
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -183,17 +205,9 @@ const Whiteboard = ({
       }
     }
   };
-  const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseUp = () => {
     setIsDrawing(false);
   };
-
-  if (!user?.presenter) {
-    return (
-      <div className="whiteboard-canvas">
-        <canvas ref={canvasRef} />
-      </div>
-    );
-  }
 
   return (
     <div

@@ -6,8 +6,9 @@ import { AuthProvider } from "./components/AuthProvider";
 import Header from "./components/Header/index";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { SocketProvider } from "./context/SocketContext";
-
 const inter = Inter({ subsets: ["latin"] });
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 export const metadata: Metadata = {
   title: "Unitiva Whiteboard",
@@ -25,7 +26,10 @@ export default function RootLayout({
         <AuthProvider>
           <Header />
           <ReduxProvider>
-            <SocketProvider>{children}</SocketProvider>
+            <SocketProvider>
+              {children}
+              <ToastContainer />
+            </SocketProvider>
           </ReduxProvider>
         </AuthProvider>
       </body>

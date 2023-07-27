@@ -24,6 +24,10 @@
     height: 40px;
     border-radius: 50%;
     border: none;
+
+    &:active {
+        transform: scale(.9);
+    }
 }
 
 .white-picker {

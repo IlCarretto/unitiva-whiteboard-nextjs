@@ -10,6 +10,8 @@ import React, { useRef, useState } from "react";
 import "../page.scss";
 import { usePathname } from "next/navigation";
 import { useSocketContext } from "@/app/context/SocketContext";
+import { generateRandomColor } from "@/app/utils/randomColor";
+import ChatBar from "@/app/components/ChatBar";
 export type Element = PencilElement | LineElement;
 
 const RoomPage = () => {
@@ -19,7 +21,7 @@ const RoomPage = () => {
   const ctxRef = useRef(null);
   const pathname = usePathname();
   const roomId = pathname.split("/").pop();
-  const { user } = useSocketContext();
+  const { user, users } = useSocketContext();
 
   const handleClearCanvas = () => {
     const canvas = canvasRef.current;
@@ -47,10 +49,10 @@ const RoomPage = () => {
     setHistory((prevHistory) => prevHistory.slice(0, prevHistory.length - 1));
   };
 
-  const openSidebar = () => {
+  const hideSidebar = () => {
     document
       .querySelector(".utensils-sidebar")
-      ?.classList.toggle("show-utensil-sidebar");
+      ?.classList.toggle("hide-utensil-sidebar");
     document.querySelector(".open-icon")?.classList.toggle("rotate-open-icon");
   };
 
@@ -89,13 +91,28 @@ const RoomPage = () => {
               <AiOutlineClear className="tools-icon" />
             </button>
           </div>
-          <button className="utensils-sidebar-opener" onClick={openSidebar}>
+          <button className="utensils-sidebar-opener" onClick={hideSidebar}>
             <MdExpandLess className="tools-icon open-icon" />
           </button>
         </div>
       )}
       <div className="row">
-        <h2 className="mt-3">Whiteboard Room code: {roomId}</h2>
+        <div className="wb-header d-flex align-items-center justify-content-between">
+          <h2 className="mt-3">Whiteboard Room code: {roomId}</h2>
+          <ul className="users-list">
+            {users &&
+              users.map((user, index) => {
+                return (
+                  <li
+                    className="user"
+                    style={{ backgroundColor: generateRandomColor() }}
+                    key={index}
+                    title={user?.userName ?? "User"}
+                  ></li>
+                );
+              })}
+          </ul>
+        </div>
         <div className="col-md-12">
           <Whiteboard
             canvasRef={canvasRef}
@@ -105,6 +122,7 @@ const RoomPage = () => {
             user={user}
           />
         </div>
+        <ChatBar/>
       </div>
     </div>
   );

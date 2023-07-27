@@ -7,12 +7,16 @@ interface SocketContextProps {
   socket: Socket;
   user: Room | null;
   setUser: React.Dispatch<React.SetStateAction<Room | null>>;
+  users: Room[] | null;
+  setUsers: React.Dispatch<React.SetStateAction<Room[] | null>>;
 }
 
 const SocketContext = createContext<SocketContextProps>({
   socket: {} as Socket,
   user: null,
   setUser: () => {},
+  users: [],
+  setUsers: () => {},
 });
 
 export const useSocketContext = () => useContext(SocketContext);
@@ -31,9 +35,10 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   };
   const socket = io(server, connectionOptions);
   const [user, setUser] = useState<Room | null>(null);
+  const [users, setUsers] = useState<Room[] | null>([]);
 
   return (
-    <SocketContext.Provider value={{ socket, user, setUser }}>
+    <SocketContext.Provider value={{ socket, user, setUser, users, setUsers }}>
       {children}
     </SocketContext.Provider>
   );

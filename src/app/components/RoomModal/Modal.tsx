@@ -15,7 +15,7 @@ interface IProps {
 }
 
 const Modal = ({ isOpen, onClose, createModal, roomId }: IProps) => {
-  const { socket, user, setUser } = useSocketContext();
+  const { socket, users, setUser } = useSocketContext();
   const [joinRoomId, setJoinRoomId] = useState("");
   const router = useRouter();
   const { data: session } = useSession();
@@ -24,7 +24,7 @@ const Modal = ({ isOpen, onClose, createModal, roomId }: IProps) => {
   const handleJoinRoom = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const roomData = {
-      userName,
+      userName: `${userName}${(users?.length ?? 0) + 1}`,
       roomId: joinRoomId,
       userId: uuid(),
       host: false,
@@ -47,7 +47,13 @@ const Modal = ({ isOpen, onClose, createModal, roomId }: IProps) => {
             <h2>Create room</h2>
             <div className="mt-1 input-group">
               <input type="text" value={roomId} disabled />
-              <button type="button">copy</button>
+              <button
+                type="button"
+                className="btn-copy"
+                onClick={() => navigator.clipboard.writeText(roomId)}
+              >
+                copy
+              </button>
             </div>
             <Link className="enter-btn" href={`/room/${roomId}`}>
               go to room
@@ -66,7 +72,11 @@ const Modal = ({ isOpen, onClose, createModal, roomId }: IProps) => {
                 value={joinRoomId}
                 onChange={(e) => setJoinRoomId(e.target.value)}
               />
-              <button className="enter-btn" onClick={handleJoinRoom}>
+              <button
+                className="enter-btn"
+                disabled={joinRoomId.length < 1}
+                onClick={handleJoinRoom}
+              >
                 go to room
                 <AiOutlineArrowRight />
               </button>

@@ -3,7 +3,7 @@ import ProtectedRoute from "@/app/components/ProtectedRoute";
 import { ToolbarProvider } from "@/app/components/Toolbar/ToolbarContext";
 import { ColorPickerProvider } from "@/app/components/ColorPicker/ColorPickerContext";
 
-export default function DashboardLayout({
+export default function RoomLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -11,7 +11,9 @@ export default function DashboardLayout({
   return (
     <ProtectedRoute>
       <ToolbarProvider>
-        <ColorPickerProvider>{children}</ColorPickerProvider>
+        <ColorPickerProvider>
+          {children}
+        </ColorPickerProvider>
       </ToolbarProvider>
     </ProtectedRoute>
   );

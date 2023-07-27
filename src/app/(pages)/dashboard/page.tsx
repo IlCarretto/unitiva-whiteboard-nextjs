@@ -5,6 +5,7 @@ import Modal from "@/app/components/RoomModal/Modal";
 import { uuid } from "@/app/utils/uuidGenerator";
 import { useSession } from "next-auth/react";
 import { useSocketContext } from "@/app/context/SocketContext";
+import { toast } from "react-toastify";
 
 const Dashboard = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -12,17 +13,41 @@ const Dashboard = () => {
   const [roomId, setRoomId] = useState(uuid());
   const { data: session } = useSession();
   const userName = session?.user?.name;
-  const { socket, user, setUser } = useSocketContext();
+  const { socket, setUser, setUsers, users, user } = useSocketContext();
 
   useEffect(() => {
     socket.on("userIsJoined", (data) => {
       if (data.success) {
         console.log("user joined succesfully");
+        setUsers(data.users);
       } else {
         console.log("something went wrong");
       }
     });
-  });
+
+    socket.on("userJoinedMsg", (data) => {
+      if (data.success) {
+        toast.info(`${data.userName} joined the room!`);
+      } else {
+        console.log("err");
+      }
+    });
+
+    socket.on("allUsers", (data) => {
+      setUsers(data.users);
+      if (data.success) {
+        console.log("user joined");
+        console.log(data);
+      } else {
+        console.log("something went wrong");
+      }
+    });
+
+    socket.on("userLeftMsg", (data) => {
+      console.log("user left");
+      toast.info(`${data} left the room!`);
+    });
+  }, [socket, setUsers]);
 
   const handleCreateRoom = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import "./index.scss";
 import { BsFillPencilFill } from "react-icons/bs";
-import { VscChromeMinimize } from "react-icons/vsc";
+import { TbBackslash } from "react-icons/tb";
 import { BiRectangle } from "react-icons/bi";
 import { useToolbarContext } from "./ToolbarContext";
 
@@ -16,7 +16,7 @@ export const Toolbar = () => {
     },
     {
       value: "line",
-      icon: <VscChromeMinimize />,
+      icon: <TbBackslash />,
     },
     {
       value: "rectangle",
